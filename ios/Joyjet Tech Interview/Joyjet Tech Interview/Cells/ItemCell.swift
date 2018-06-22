@@ -17,6 +17,9 @@ class ItemCell: UITableViewCell {
     @IBOutlet weak var itemTitleHeight: NSLayoutConstraint!
     @IBOutlet weak var itemDescriptionHeight: NSLayoutConstraint!
     
+    @IBOutlet weak var favoriteButton: UIButton!
+    
+    @IBOutlet weak var backButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()

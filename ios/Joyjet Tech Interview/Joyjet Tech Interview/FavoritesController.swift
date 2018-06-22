@@ -17,7 +17,6 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
         self.favoritesTableView.dataSource = self
         self.favoritesTableView.rowHeight = UITableViewAutomaticDimension
         self.favoritesTableView.estimatedRowHeight = 200
-        
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -40,6 +39,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
             categoryItemCell.itemTitle.text = item.title
             categoryItemCell.titleHeight.constant = sizeToFitLabel(frame: categoryItemCell.itemTitle.frame, text: item.title, fontSize: 14.0, bold: false).height
             categoryItemCell.descriptionHeight.constant = sizeToFitLabel(frame: categoryItemCell.itemSubtitle.frame, text: item.description.prefix(140) + " ...", fontSize: 12.0, bold: false).height
+            categoryItemCell.imageName = item.photosGaleryUrl[0]
             categoryItemCell.itemImageView.imageFromURL(urlString: item.photosGaleryUrl[0])
             cellToReturn = categoryItemCell
         }
@@ -52,7 +52,7 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "showItem"{
-            if let destinationVc: ShowItemCategoryController = segue.destination as? ShowItemCategoryController {
+            if let destinationVc: ShowItemController = segue.destination as? ShowItemController {
                 if let indexPath = self.favoritesTableView.indexPathForSelectedRow {
                     let category = allCategorys[indexPath.section]
                     let selectedItem = category.items[indexPath.row]
@@ -65,13 +65,45 @@ class FavoritesController: UIViewController, UITableViewDelegate, UITableViewDat
     @IBAction func leftButtonAction(_ sender: UIButton) {
         let row = sender.tag % 1000
         let section = sender.tag / 1000
-        print("Item:", allCategorys[section].items[row])
+        let item = allCategorys[section].items[row]
+        if let currentCell = self.favoritesTableView.cellForRow(at: IndexPath(row: row, section: section)) as? CategoryItemCell{
+            if let index = item.photosGaleryUrl.index(where: { $0 == currentCell.imageName }) {
+                switch currentCell.imageName{
+                case item.photosGaleryUrl.first:
+                    currentCell.itemImageView.imageFromURL(urlString: item.photosGaleryUrl.last!)
+                    currentCell.imageName = item.photosGaleryUrl.last!
+                    break
+                default:
+                    currentCell.itemImageView.imageFromURL(urlString: item.photosGaleryUrl[index-1])
+                    currentCell.imageName = item.photosGaleryUrl[index-1]
+                    break
+                }
+            }
+        }
     }
     
     @IBAction func rightButtonAction(_ sender: UIButton) {
         let row = sender.tag % 1000
         let section = sender.tag / 1000
-        print("Item:", allCategorys[section].items[row])
+        let item = allCategorys[section].items[row]
+        if let currentCell = self.favoritesTableView.cellForRow(at: IndexPath(row: row, section: section)) as? CategoryItemCell{
+            if let index = item.photosGaleryUrl.index(where: { $0 == currentCell.imageName }) {
+                switch currentCell.imageName{
+                case item.photosGaleryUrl.first:
+                    currentCell.itemImageView.imageFromURL(urlString: item.photosGaleryUrl[1])
+                    currentCell.imageName = item.photosGaleryUrl[1]
+                    break
+                case item.photosGaleryUrl.last:
+                    currentCell.itemImageView.imageFromURL(urlString: item.photosGaleryUrl[0])
+                    currentCell.imageName = item.photosGaleryUrl[0]
+                    break
+                default:
+                    currentCell.itemImageView.imageFromURL(urlString: item.photosGaleryUrl[index+1])
+                    currentCell.imageName = item.photosGaleryUrl[index+1]
+                    break
+                }
+            }
+        }
     }
     
     

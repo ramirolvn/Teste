@@ -16,6 +16,7 @@ class CategoryItemCell: UITableViewCell {
     @IBOutlet weak var leftButton: UIButton!
     @IBOutlet weak var titleHeight: NSLayoutConstraint!
     @IBOutlet weak var descriptionHeight: NSLayoutConstraint!
+    var imageName = ""
     
     override func awakeFromNib() {
         super.awakeFromNib()

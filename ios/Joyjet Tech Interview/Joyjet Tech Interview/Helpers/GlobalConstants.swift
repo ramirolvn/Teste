@@ -8,5 +8,5 @@
 
 import Foundation
 
-var allCategorys: [Category] = []
-var favoritesItem: [CategoryItems] = []
+var allCategorys: [Category] = [Category]()
+var favoritesItem: [CategoryItems] = [CategoryItems]()
